@@ -1,11 +1,14 @@
 
 package com.github.manueligno78.cukehub;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,6 +78,12 @@ public class AppController {
         }
     }
 
+    private void updateFeatureFiles() {
+        // const featureFiles = featureFilesModule.getFiles(config.directoryPath);
+        // featureFilesModule.updateFeatureFilesCopy(JSON.parse(JSON.stringify(featureFiles)));
+        // notifyClients(JSON.stringify({ action: 'featureFilesUpdated' }));
+    }
+
     private void loadConfig() {
         try {
             Gson gson = new Gson();
@@ -118,9 +127,18 @@ public class AppController {
     }
 
     private boolean cloneGitRepository(String gitProjectUrl, String gitBranch, String directoryPath) {
-        
+    try {
+        Git.cloneRepository()
+            .setURI(gitProjectUrl)
+            .setBranch(gitBranch)
+            .setDirectory(new File(directoryPath))
+            .call();
         // notify clients via wss
         return true;
+    } catch (GitAPIException e) {
+        e.printStackTrace();
+        return false;
+    }
     }
 
 }
