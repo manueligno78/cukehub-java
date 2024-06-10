@@ -1,0 +1,89 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+#messages {
+  width: 99%;
+  height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: small;
+  text-align: left;
+  background: darkkhaki;
+}
+
+ul.tag-list {
+  list-style-type: none;
+  /* Rimuove i punti dell'elenco */
+  padding: 0;
+  /* Rimuove il padding */
+  display: flex;
+  /* Rende gli elementi dell'elenco affiancati */
+  flex-wrap: wrap;
+  /* Permette agli elementi dell'elenco di andare a capo se necessario */
+}
+
+ul.tag-list li {
+  margin-right: 10px;
+  /* Aggiunge uno spazio di 10px a destra di ogni elemento dell'elenco */
+  /* background-color: #007bff; /* Cambia il colore di sfondo in blu */
+  color: white;
+  /* Cambia il colore del testo in bianco */
+  padding: 5px;
+  /* Aggiunge un padding di 5px */
+  border-radius: 3px;
+  /* Arrotonda gli angoli */
+}
+
+/* Stile per l'header */
+.header {
+  background-color: #4CAF50;
+  /* Colore di sfondo */
+  color: white;
+  /* Colore del testo */
+  padding: 20px;
+  /* Spazio intorno al testo */
+  text-align: center;
+  /* Allinea il testo al centro */
+  font-size: 2em;
+  /* Dimensione del testo */
+  font-weight: bold;
+  /* Grassetto */
+}
+
+
+#run-test-button:hover,
+#operatorSelect:hover {
+  background-color: #218838;
+  /* Cambia il colore di sfondo al passaggio del mouse */
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.disabled {
+  pointer-events: none;
+  background-color: #ccc;
+  opacity: 0.5;
+}
+
+#save-button,
+#reset-button {
+  display: none;
+}
+
+.content-updated {
+  background-color: #007bff;
+}
+
+.tag-label {
+  transition: all 0.5s ease;
+}
+
+.tag-label:hover {
+  transform: scale(1.2);
+}
