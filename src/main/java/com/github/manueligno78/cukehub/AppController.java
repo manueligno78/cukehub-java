@@ -8,7 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -127,18 +128,41 @@ public class AppController {
     }
 
     private boolean cloneGitRepository(String gitProjectUrl, String gitBranch, String directoryPath) {
-    try {
-        Git.cloneRepository()
-            .setURI(gitProjectUrl)
-            .setBranch(gitBranch)
-            .setDirectory(new File(directoryPath))
-            .call();
-        // notify clients via wss
-        return true;
-    } catch (GitAPIException e) {
-        e.printStackTrace();
-        return false;
-    }
+        try {
+            File directory = new File(directoryPath);
+            if (directory.exists() && directory.isDirectory()) {
+                File gitDir = new File(directoryPath + "/.git");
+                if (gitDir.exists()) {
+                    // Existing git repository
+                    Repository existingRepo = new FileRepositoryBuilder().setGitDir(gitDir).build();
+                    String currentRemoteUrl = existingRepo.getConfig().getString("remote", "origin", "url");
+                    if (currentRemoteUrl == null || !currentRemoteUrl.equals(gitProjectUrl)) {
+                        throw new Exception("Existing git project in directory does not match the provided URL");
+                    }
+                    Git git = new Git(existingRepo);
+                    String currentBranch = git.getRepository().getBranch();
+                    if (!currentBranch.equals(gitBranch)) {
+                        git.checkout().setName(gitBranch).call();
+                    }
+                } else if (directory.list().length > 0) {
+                    throw new Exception("Directory is not empty and does not contain a git project");
+                } else {
+                    // Clone repository
+                    Git.cloneRepository()
+                            .setURI(gitProjectUrl)
+                            .setBranch(gitBranch)
+                            .setDirectory(directory)
+                            .call();
+                }
+            } else {
+                throw new Exception("Directory does not exist");
+            }
+            // notify clients via wss
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
