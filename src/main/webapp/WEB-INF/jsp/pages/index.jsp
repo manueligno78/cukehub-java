@@ -71,7 +71,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <!--jsp:include page="../partials/featureFileList.jsp" /-->
+                      <!-- include "../partials/featureFileList.jsp" /-->
                     </tbody>
                   </table>
                 </div>

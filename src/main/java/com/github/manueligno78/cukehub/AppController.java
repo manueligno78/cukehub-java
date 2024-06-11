@@ -1,115 +1,91 @@
 
 package com.github.manueligno78.cukehub;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
 @Controller
 public class AppController {
 
-    private Config config;
+    private final ConfigService configService;
+    private final GitService gitService;
+    private final FeatureFileModule featureFilesModule;
+
+    @Autowired
+    public AppController(ConfigService configService, GitService gitService, FeatureFileModule featureFilesModule) {
+        this.configService = configService;
+        this.gitService = gitService;
+        this.featureFilesModule = featureFilesModule;
+    }
 
     @GetMapping("/")
     public String getRoot(Model model) {
-        loadConfig();
-        if (!config.getIsConfigurated().equalsIgnoreCase("true")) {
+        Config loadedConfig = configService.loadConfig("config.json");
+        if (!loadedConfig.getIsConfigurated()) {
             System.out.println("Config check failed, redirecting to /settings");
             return "redirect:/settings";
         }
-
+        System.out.println("Git Project URL: " + loadedConfig.getGitProjectUrl());
         System.out.println("Config check true, rendering pages/index");
         // if (featureFilesModule.getFeatureFilesCopy().length == 0) {
-        // updateFeatureFiles();
+        updateFeatureFiles(loadedConfig);
         // }
 
-        model.addAttribute("config", config); // pass data to the JSP
+        model.addAttribute("configuration", loadedConfig); // pass data to the JSP
+        // model.addAttribute("featureFiles", featureFilesModule);
         return "pages/index"; // this will render 'src/main/webapp/WEB-INF/jsp/index.jsp'
     }
 
     @GetMapping("/settings")
     public String getSettings(Model model) {
-        loadConfig();
-        model.addAttribute("gitProjectUrl", config.getGitProjectUrl());
-        model.addAttribute("gitBranch", config.getGitBranch());
-        model.addAttribute("directoryPath", config.getDirectoryPath());
-        model.addAttribute("folderToExclude", config.getFolderToExclude());
+        Config loadedConfig = configService.loadConfig("config.json");
+        model.addAttribute("gitProjectUrl", loadedConfig.getGitProjectUrl());
+        model.addAttribute("gitBranch", loadedConfig.getGitBranch());
+        model.addAttribute("directoryPath", loadedConfig.getDirectoryPath());
+        model.addAttribute("folderToExclude", loadedConfig.getFolderToExclude());
         return "pages/settings";
     }
 
     @PostMapping("/save-settings")
     public String saveSettings(String gitProjectUrl, String gitBranch, String directoryPath, String folderToExclude) {
-        String newConfig = "{"
-                + "\"gitProjectUrl\":\"" + gitProjectUrl + "\","
-                + "\"gitBranch\":\"" + gitBranch + "\","
-                + "\"directoryPath\":\"" + directoryPath + "\","
-                + "\"folderToExclude\":\"" + folderToExclude + "\","
-                + "\"isConfigurated\":true"
-                + "}";
-        if (writeConfig(newConfig)) {
+        Config newConfig = new Config(gitProjectUrl, gitBranch, directoryPath, folderToExclude, true);
+        if (configService.saveConfig(newConfig, "config.json")) {
             System.out.println("Config saved.");
             System.out.println("Create new directory if not exists");
             boolean folderCheckSuccessful = createFolderIfNotExists(directoryPath);
-            boolean cloneSuccessful = cloneGitRepository(gitProjectUrl, gitBranch, directoryPath);
-            System.out.println("folederCheckSuccessful: " + folderCheckSuccessful);
+            boolean cloneSuccessful = gitService.cloneGitRepository(gitProjectUrl, gitBranch, directoryPath);
+            System.out.println("folderCheckSuccessful: " + folderCheckSuccessful);
             System.out.println("cloneSuccessful: " + cloneSuccessful);
             if (cloneSuccessful && folderCheckSuccessful) {
                 System.out.println("Clone and folder success, redirecting to /");
-            // updateFeatureFiles();
                 return "redirect:/";
-                } else {
+            } else {
                 System.out.println("Clone or folder fail, redirecting to /settings");
                 return "redirect:/settings";
-                }
+            }
         } else {
             return "Error: Config not saved";
         }
     }
 
-    private void updateFeatureFiles() {
-        // const featureFiles = featureFilesModule.getFiles(config.directoryPath);
-        // featureFilesModule.updateFeatureFilesCopy(JSON.parse(JSON.stringify(featureFiles)));
+    private void updateFeatureFiles(Config config) {
+        List<FeatureFile> featureFiles = featureFilesModule.getFiles(config.getDirectoryPath(),
+                config.getFolderToExclude());
+        for (FeatureFile featureFile : featureFiles) {
+            System.out.println("Feature file: " + featureFile.getName());
+            System.out.println("Relative path: " + featureFile.getRelativePath());
+            System.out.println("Tags: " + featureFile.getTags().toString());
+        }
+        // featureFilesModule.updateFeatureFilesCopy(featureFiles);
         // notifyClients(JSON.stringify({ action: 'featureFilesUpdated' }));
-    }
-
-    private void loadConfig() {
-        try {
-            Gson gson = new Gson();
-            config = gson.fromJson(new FileReader("config.json"), Config.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean writeConfig(String newConfig) {
-        Gson gson = new Gson();
-        try {
-            newConfig = newConfig.replace("\\", "\\\\");
-            gson.fromJson(newConfig, Object.class);
-            Files.write(Paths.get("config.json"), newConfig.getBytes());
-            return true;
-        } catch (JsonSyntaxException e) {
-            System.out.println("Error parsing json config: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            System.out.println("Error writing config: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
     }
 
     private boolean createFolderIfNotExists(String folderPath) {
@@ -126,45 +102,6 @@ public class AppController {
             return false;
         }
     }
-
-    private boolean cloneGitRepository(String gitProjectUrl, String gitBranch, String directoryPath) {
-        try {
-            File directory = new File(directoryPath);
-            if (directory.exists() && directory.isDirectory()) {
-                File gitDir = new File(directoryPath + "/.git");
-                if (gitDir.exists()) {
-                    // Existing git repository
-                    Repository existingRepo = new FileRepositoryBuilder().setGitDir(gitDir).build();
-                    String currentRemoteUrl = existingRepo.getConfig().getString("remote", "origin", "url");
-                    if (currentRemoteUrl == null || !currentRemoteUrl.equals(gitProjectUrl)) {
-                        throw new Exception("Existing git project in directory does not match the provided URL");
-                    }
-                    Git git = new Git(existingRepo);
-                    String currentBranch = git.getRepository().getBranch();
-                    if (!currentBranch.equals(gitBranch)) {
-                        git.checkout().setName(gitBranch).call();
-                    }
-                } else if (directory.list().length > 0) {
-                    throw new Exception("Directory is not empty and does not contain a git project");
-                } else {
-                    // Clone repository
-                    Git.cloneRepository()
-                            .setURI(gitProjectUrl)
-                            .setBranch(gitBranch)
-                            .setDirectory(directory)
-                            .call();
-                }
-            } else {
-                throw new Exception("Directory does not exist");
-            }
-            // notify clients via wss
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
 }
 
 // Controller.java is a porting of the following JavaScript code:
