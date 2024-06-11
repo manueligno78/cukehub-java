@@ -39,9 +39,9 @@ public class AppController {
         updateFeatureFiles(loadedConfig);
         // }
 
-        model.addAttribute("configuration", loadedConfig); // pass data to the JSP
-        // model.addAttribute("featureFiles", featureFilesModule);
-        return "pages/index"; // this will render 'src/main/webapp/WEB-INF/jsp/index.jsp'
+        model.addAttribute("configuration", loadedConfig);
+        model.addAttribute("featureFiles", featureFilesModule);
+        return "index";
     }
 
     @GetMapping("/settings")
@@ -51,7 +51,7 @@ public class AppController {
         model.addAttribute("gitBranch", loadedConfig.getGitBranch());
         model.addAttribute("directoryPath", loadedConfig.getDirectoryPath());
         model.addAttribute("folderToExclude", loadedConfig.getFolderToExclude());
-        return "pages/settings";
+        return "settings";
     }
 
     @PostMapping("/save-settings")

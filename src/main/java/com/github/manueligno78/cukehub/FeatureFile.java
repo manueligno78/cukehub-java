@@ -15,6 +15,7 @@ public class FeatureFile {
     private String relativePath;
     private String content;
     private String tags;
+    private String featureId;
 
     public FeatureFile(String name, String path, String relativePath, String content, String tags) {
         this.name = name;
@@ -22,6 +23,23 @@ public class FeatureFile {
         this.relativePath = relativePath;
         this.content = content;
         this.tags = tags;
+        this.featureId = name+randomString(5);
+    }
+
+    private String randomString(int length) {
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = (int)(AlphaNumericString.length() * Math.random());
+            sb.append(AlphaNumericString.charAt(index));
+        }
+        return sb.toString();
+    }
+
+    public String getFeatureId() {
+        return featureId;
     }
 
     public String getName() {
