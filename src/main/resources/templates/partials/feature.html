@@ -1,0 +1,33 @@
+<div th:fragment="feature" class="card" th:id="'featureCard-' + ${featureFile.featureId}">
+    <!-- <div class="card-header d-flex gap-2 justify-content-center flex-wrap">
+        <span th:each="tag, stat : ${featureFile.tags}"
+            class="tag-label badge d-flex p-2 mr-1 mb-1 align-items-center text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill"
+            th:id="'tag-' + ${tag.name} + '-featureCard-' + ${featureFile.featureId}" th:data-name="${tag.name}">
+            <span contentEditable="true"
+                th:onblur="'updateFeature(\'' + ${featureFile.featureId} + '\', \'feature.tags[\' + ${stat.index} + \'].name\', this.innerText)'"
+                class="px-1" th:text="${tag.name}"></span>
+            <button type="button" class="close" aria-label="Close"
+                th:onclick="'removeTag(\'' + ${featureFile.featureId} + '\', \'' + ${featureFile.feature.featureId} + '\', \'' + ${tag.name} + '\',\'tag-' + ${tag.name} + '\',\'tag-' + ${tag.name} + '-featureCard-' + ${featureFile.featureId} + '\')'">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </span>
+        <span
+            class="add-tag badge d-flex p-2 align-items-center text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
+            <a href="#" class="addTagInput" contentEditable="true" onclick="this.innerText = '@'"
+                th:onblur="'if (isValidTag(this.innerText)) addTag(\'' + ${featureFile.featureId} + '\', null, this.innerText, this); else this.innerText = \'+ add tag\'"
+                th:onkeydown="'if (event.key === \'Enter\') { event.preventDefault(); if (isValidTag(this.innerText)) addTag(\'' + ${featureFile.featureId} + '\', null, this.innerText, this); else this.innerText = \'+ add tag\'}'">
+                + add tag
+            </a>
+        </span>
+    </div> -->
+<h5 class="card-header" contentEditable="true" data-feature-id="${featureFile.featureId}"
+    onblur="updateFeature(this.getAttribute('data-feature-id'), 'feature.name', this.innerText)"
+    th:text="${featureFile.name}"></h5>
+<p class="card-body m-1 py-1 small" th:text="'Located in: ' + ${featureFile.relativePath}"></p>
+<!-- <p class="card-body" contentEditable="true" data-feature-id="${featureFile.featureId}"
+    onblur="updateFeature(this.getAttribute('data-feature-id'), 'feature.description', this.innerText)">
+    <span th:if="${featureFile.description != null}"
+        th:utext="${#strings.replace(featureFile.description, '\n', '<br>').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}"></span>
+    <span th:if="${featureFile.description == null}">No description</span>
+</p> -->
+</div>
