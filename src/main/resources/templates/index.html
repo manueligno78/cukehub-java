@@ -72,10 +72,12 @@
                     </thead>
                     <tbody>
                       <ul>
-                        <li th:each="featureFile : ${featureFiles.getFiles(configuration.directoryPath, 'configuration.folderToExclude')}">
+                        <!-- include featureFileList.html -->
+                        <div th:insert="~{partials/featureFileList :: featureFileList}"></div>
+                        <!-- <li th:each="featureFile : ${featureFiles.getFiles(configuration.directoryPath, 'configuration.folderToExclude')}">
                           <div>Name: <span th:text="${featureFile.name}"></span></div>
                           <div>Relative Path: <span th:text="${featureFile.relativePath}"></span></div>
-                        </li>
+                        </li> -->
                       </ul>
                       <!-- include "../partials/featureFileList.jsp" /-->
                     </tbody>
