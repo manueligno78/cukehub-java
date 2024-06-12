@@ -1,7 +1,7 @@
-<tr th:fragment="featureFileList" th:each="featureFile : ${featureFiles.getFiles(configuration.directoryPath, 'configuration.folderToExclude')}"
+<tr th:fragment="featureFileList" th:each="featureFile : ${featureFiles}"
     th:id="${featureFile.featureId}" th:if="${featureFile != null}">
-    <!-- <td th:text="${featureFile.name}"></td> -->
+    <!-- Features -->
     <td th:insert="~{partials/feature :: feature(featureFile=${featureFile})}"></td>
     <!-- Scenarios -->
-    <!-- <td th:replace="partials/scenarioList :: scenarioList(featureFile=${featureFile})"></td> -->
+    <td th:insert="~{partials/scenarioList :: scenarioList(featureFile=${featureFile})}"></td>
 </tr>

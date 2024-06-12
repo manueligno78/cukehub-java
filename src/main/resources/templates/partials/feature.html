@@ -20,14 +20,14 @@
             </a>
         </span>
     </div> -->
-<h5 class="card-header" contentEditable="true" data-feature-id="${featureFile.featureId}"
-    onblur="updateFeature(this.getAttribute('data-feature-id'), 'feature.name', this.innerText)"
-    th:text="${featureFile.name}"></h5>
-<p class="card-body m-1 py-1 small" th:text="'Located in: ' + ${featureFile.relativePath}"></p>
-<!-- <p class="card-body" contentEditable="true" data-feature-id="${featureFile.featureId}"
-    onblur="updateFeature(this.getAttribute('data-feature-id'), 'feature.description', this.innerText)">
-    <span th:if="${featureFile.description != null}"
-        th:utext="${#strings.replace(featureFile.description, '\n', '<br>').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}"></span>
-    <span th:if="${featureFile.description == null}">No description</span>
-</p> -->
+    <h5 class="card-header" contentEditable="true" data-feature-id="${featureFile.featureId}"
+        onblur="updateFeature(this.getAttribute('data-feature-id'), 'feature.name', this.innerText)"
+        th:text="${featureFile.name}"></h5>
+    <p class="card-body m-1 py-1 small" th:text="'Located in: ' + ${featureFile.relativePath}"></p>
+    <!-- <p class="card-body" contentEditable="true" data-feature-id="${featureFile.featureId}"
+        onblur="updateFeature(this.getAttribute('data-feature-id'), 'feature.description', this.innerText)">
+        <span th:if="${featureFile.feature.description != null}"
+            th:utext="${#strings.replace(featureFile.feature.description, '\n', '<br>').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}"></span>
+        <span th:if="${featureFile.feature.description == null}">No description</span>
+    </p> -->
 </div>

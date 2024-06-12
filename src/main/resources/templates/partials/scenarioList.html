@@ -1,0 +1,9 @@
+<span th:fragment="scenarioList" th:text="${featureFile.feature.children.size()} + ' scenarios contained:'"></span>
+<ul class="list-unstyled">
+    <li th:each="child : ${featureFile.feature.children}">
+        <!-- Print child.scenario.name -->
+        <span th:text="${child.name}"></span>
+        <!-- <div th:if="${child.scenario}" th:include="partials/scenario :: scenario(child=${child}, featureFile=${featureFile}, index=${stat.index})">
+        </div> -->
+    </li>
+</ul>

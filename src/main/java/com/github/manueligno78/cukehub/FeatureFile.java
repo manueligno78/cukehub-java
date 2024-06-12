@@ -3,6 +3,11 @@ package com.github.manueligno78.cukehub;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import gherkin.AstBuilder;
+import gherkin.Parser;
+import gherkin.ast.Feature;
+import gherkin.ast.GherkinDocument;
+
 public class FeatureFile {
     // name of the feature file
     // path of the feature file
@@ -16,6 +21,7 @@ public class FeatureFile {
     private String content;
     private String tags;
     private String featureId;
+    private Feature feature;
 
     public FeatureFile(String name, String path, String relativePath, String content, String tags) {
         this.name = name;
@@ -24,6 +30,9 @@ public class FeatureFile {
         this.content = content;
         this.tags = tags;
         this.featureId = name+randomString(5);
+        Parser<GherkinDocument> parser = new Parser<>(new AstBuilder());
+        GherkinDocument gherkinDocument = parser.parse(content);
+        this.feature = gherkinDocument.getFeature();
     }
 
     private String randomString(int length) {
@@ -36,6 +45,10 @@ public class FeatureFile {
             sb.append(AlphaNumericString.charAt(index));
         }
         return sb.toString();
+    }
+
+    public Feature getFeature() {
+        return feature;
     }
 
     public String getFeatureId() {
@@ -59,10 +72,12 @@ public class FeatureFile {
     }
 
     public List<String> getTags() {
-        // search for tags in the content
-        //TODO: this method is buggy
-        return content.lines().filter(line -> line.startsWith("@")).collect(Collectors.toList());
+        return feature.getTags().stream().map(tag -> tag.getName()).collect(Collectors.toList());
     }
+
+    public List<String> getScenarios() {
+        return feature.getChildren().stream().map(scenario -> scenario.getName()).collect(Collectors.toList());
+    }   
 
     public void setName(String name) {
         this.name = name;

@@ -40,7 +40,7 @@ public class AppController {
         // }
 
         model.addAttribute("configuration", loadedConfig);
-        model.addAttribute("featureFiles", featureFilesModule);
+        model.addAttribute("featureFiles", featureFilesModule.getFiles(loadedConfig.getDirectoryPath(), loadedConfig.getFolderToExclude()));
         return "index";
     }
 
