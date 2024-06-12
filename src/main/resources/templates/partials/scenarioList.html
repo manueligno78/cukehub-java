@@ -1,9 +1,11 @@
-<span th:fragment="scenarioList" th:text="${featureFile.feature.children.size()} + ' scenarios contained:'"></span>
-<ul class="list-unstyled">
-    <li th:each="child : ${featureFile.feature.children}">
-        <!-- Print child.scenario.name -->
-        <span th:text="${child.name}"></span>
-        <!-- <div th:if="${child.scenario}" th:include="partials/scenario :: scenario(child=${child}, featureFile=${featureFile}, index=${stat.index})">
-        </div> -->
-    </li>
-</ul>
+<div th:fragment="scenarioList">
+    <span th:text="${featureFile.feature.children.size()} + ' scenarios contained:'"></span>
+    <ul class="list-unstyled">
+        <li th:each="child, stat : ${featureFile.feature.children}">
+            <th:block th:if="${child instanceof T(gherkin.ast.Scenario)}">
+                <div th:replace="~{partials/scenario :: scenario(child=${child}, featureFile=${featureFile}, index=${stat.index})}"></div>
+            </th:block>
+            </div>
+        </li>
+    </ul>
+</div>
