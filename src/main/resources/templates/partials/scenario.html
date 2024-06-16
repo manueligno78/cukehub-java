@@ -1,4 +1,4 @@
-<li th:fragment="scenario">
+<div th:fragment="scenario">
     <div class="card shadow border-secondary mb-4" th:id="'scenarioCard-' + ${featureFile.featureId} + '-' + ${index}">
         <div class="card-header py-3">
             <div class="d-flex gap-2 justify-content-center flex-wrap">
@@ -47,4 +47,4 @@
             <div th:insert="~{partials/stepList :: stepList(child=${child}, featureFile=${featureFile}, index=${index})}"></div>
         </div>
     </div>
-</li>
+</div>

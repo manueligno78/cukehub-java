@@ -11,13 +11,11 @@
             th:aria-labelledby="'heading-' + ${featureFile.featureId} + '-' + ${index}"
             th:data-parent="'#accordion-' + ${featureFile.featureId} + '-' + ${index}">
             <div class="accordion-body">
-                <!-- <ul class="list-unstyled">
-                    <th:block th:each="step, stepStat : ${child.scenario.steps}">
-                        <div
-                            th:replace="partials/step :: step (featureFile=${featureFile}, child=${child}, index=${index}, step=${step}, stepIndex=${stepStat.index})">
-                        </div>
+                <ul class="list-unstyled">
+                    <th:block th:each="step, stepStat : ${child.steps}">
+                        <div th:insert="~{partials/step :: step(child=${child}, featureFile=${featureFile}, index=${index}, step=${step}, stepIndex=${stepStat})}"></div>
                     </th:block>
-                </ul> -->
+                </ul>
                 <!-- <div th:if="${child.scenario.isOutline}" class="card-body">
                     <span>Examples</span>
                     <table class="table table-striped display">

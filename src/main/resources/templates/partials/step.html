@@ -1,0 +1,23 @@
+<li th:fragment="step">
+    <div class="card shadow border-secondary mb-4"
+        th:id="'stepCard-' + ${featureFile.featureId} + '-' + ${index} + '-' + ${stepIndex}">
+        <div class="card-header py-3">
+            <div class="d-flex gap-2">
+                <span class="badge bg-primary-subtle text-primary-emphasis" th:text="${step.keyword}">
+                </span>
+                <span class="badge bg-primary-subtle text-primary-emphasis" th:text="${step.text}">
+                </span>
+                <!-- <div th:if="${step.dataTable}" class="card-body">
+                    <table class="table table-striped display">
+                        <tr>
+                            <td th:each="row : ${step.dataTable.rows}">
+                                <span
+                                    th:text="${'| ' + row.cells.stream().map(cell -> cell.value).collect(Collectors.joining(' | ')) + ' |'}"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</li>
