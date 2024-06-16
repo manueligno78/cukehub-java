@@ -35,7 +35,7 @@ public class AppController {
         System.out.println("Git Project URL: " + loadedConfig.getGitProjectUrl());
         System.out.println("Config check true, rendering pages/index");
         // if (featureFilesModule.getFeatureFilesCopy().length == 0) {
-        featureFilesService.updateFeatureFiles(loadedConfig);
+        //featureFilesService.updateFeatureFiles(loadedConfig);
         // }
 
         model.addAttribute("configuration", loadedConfig);
