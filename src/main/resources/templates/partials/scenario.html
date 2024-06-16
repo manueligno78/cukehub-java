@@ -44,7 +44,7 @@
                     th:utext="${#strings.replace(child.description, '\n', '<br>').replace('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}"></span>
                 <span th:if="${child.description == null}">No description</span>
             </p>
-            <!-- <div th:replace="partials/stepList :: stepList(${featureFile}, ${child}, ${index})"></div> -->
+            <div th:insert="~{partials/stepList :: stepList(child=${child}, featureFile=${featureFile}, index=${index})}"></div>
         </div>
     </div>
 </li>
