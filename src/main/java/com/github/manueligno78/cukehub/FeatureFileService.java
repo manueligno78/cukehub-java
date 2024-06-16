@@ -8,44 +8,56 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class FeatureFileModule {
+@Service
+public class FeatureFileService {
 
-public List<FeatureFile> getFiles(String directoryPath, String folderToExclude) {
-    List<FeatureFile> featureFiles = new ArrayList<>();
-    Path startPath = Paths.get(directoryPath);
-    String pattern = "glob:**/*.feature";
+    public List<FeatureFile> getFiles(Config config) {
+        List<FeatureFile> featureFiles = new ArrayList<>();
+        Path startPath = Paths.get(config.getDirectoryPath());
+        String pattern = "glob:**/*.feature";
 
-    try {
-        Files.walk(startPath)
-            .filter(path -> Files.isRegularFile(path) && !path.toString().matches(folderToExclude))
-            .forEach(path -> {
-                if (path.getFileSystem().getPathMatcher(pattern).matches(path)) {
-                    String name = path.getFileName().toString();
-                    String absolutePath = path.toAbsolutePath().toString();
-                    String relativePath = startPath.relativize(path).toString();
-                    String content = "";
-                    try {
-                        content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        try {
+            Files.walk(startPath)
+                .filter(path -> Files.isRegularFile(path) && !path.toString().matches(config.getFolderToExclude()))
+                .forEach(path -> {
+                    if (path.getFileSystem().getPathMatcher(pattern).matches(path)) {
+                        String name = path.getFileName().toString();
+                        String absolutePath = path.toAbsolutePath().toString();
+                        String relativePath = startPath.relativize(path).toString();
+                        String content = "";
+                        try {
+                            content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        FeatureFile featureFile = new FeatureFile(name, absolutePath, relativePath, content, null);
+                        featureFiles.add(featureFile);
                     }
-                    FeatureFile featureFile = new FeatureFile(name, absolutePath, relativePath, content, null);
-                    featureFiles.add(featureFile);
-                }
-            });
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
+                });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    return featureFiles;
-}
+        return featureFiles;
+    }
 
     public void updateFeatureFilesCopy(List<FeatureFile> featureFiles) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateFeatureFilesCopy'");
+    }
+
+    public List<FeatureFile> updateFeatureFiles(Config config) {
+        List<FeatureFile> featureFiles = getFiles(config);
+        for (FeatureFile featureFile : featureFiles) {
+            System.out.println("Feature file: " + featureFile.getName());
+            System.out.println("Relative path: " + featureFile.getRelativePath());
+            System.out.println("Tags: " + featureFile.getTags().toString());
+        }
+        return featureFiles;
+    // featureFilesModule.updateFeatureFilesCopy(featureFiles);
+    // notifyClients(JSON.stringify({ action: 'featureFilesUpdated' }));
     }
 
 }

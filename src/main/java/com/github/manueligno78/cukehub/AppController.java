@@ -4,7 +4,6 @@ package com.github.manueligno78.cukehub;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,13 +16,13 @@ public class AppController {
 
     private final ConfigService configService;
     private final GitService gitService;
-    private final FeatureFileModule featureFilesModule;
+    private final FeatureFileService featureFilesService;
 
     @Autowired
-    public AppController(ConfigService configService, GitService gitService, FeatureFileModule featureFilesModule) {
+    public AppController(ConfigService configService, GitService gitService, FeatureFileService featureFilesService) {
         this.configService = configService;
         this.gitService = gitService;
-        this.featureFilesModule = featureFilesModule;
+        this.featureFilesService = featureFilesService;
     }
 
     @GetMapping("/")
@@ -36,11 +35,11 @@ public class AppController {
         System.out.println("Git Project URL: " + loadedConfig.getGitProjectUrl());
         System.out.println("Config check true, rendering pages/index");
         // if (featureFilesModule.getFeatureFilesCopy().length == 0) {
-        updateFeatureFiles(loadedConfig);
+        featureFilesService.updateFeatureFiles(loadedConfig);
         // }
 
         model.addAttribute("configuration", loadedConfig);
-        model.addAttribute("featureFiles", featureFilesModule.getFiles(loadedConfig.getDirectoryPath(), loadedConfig.getFolderToExclude()));
+        model.addAttribute("featureFiles", featureFilesService.getFiles(loadedConfig));
         return "index";
     }
 
@@ -74,17 +73,6 @@ public class AppController {
         } else {
             return "Error: Config not saved";
         }
-    }
-
-    private void updateFeatureFiles(Config config) {
-        List<FeatureFile> featureFiles = featureFilesModule.getFiles(config.getDirectoryPath(),config.getFolderToExclude());
-        for (FeatureFile featureFile : featureFiles) {
-            System.out.println("Feature file: " + featureFile.getName());
-            System.out.println("Relative path: " + featureFile.getRelativePath());
-            System.out.println("Tags: " + featureFile.getTags().toString());
-        }
-        // featureFilesModule.updateFeatureFilesCopy(featureFiles);
-        // notifyClients(JSON.stringify({ action: 'featureFilesUpdated' }));
     }
 
     private boolean createFolderIfNotExists(String folderPath) {
