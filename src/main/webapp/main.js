@@ -153,12 +153,15 @@ $(document).ready(function () {
   socket.send(message);
 });
 
-function updateFeature(featureId, field, newValue) {
+function updateFeature(element) {
+  var featureId = element.getAttribute('data-feature-id');
+  var dataField = element.getAttribute('data-field');
+  var text = element.innerText;
   let message = JSON.stringify({
     action: 'updateFeature',
     featureId: featureId,
-    field: field,
-    newValue: newValue
+    field: dataField,
+    newValue: text
   });
   socket.send(message);
 }
