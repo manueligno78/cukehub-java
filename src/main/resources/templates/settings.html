@@ -27,21 +27,21 @@
                                 <div class="form-group">
                                     <label for="gitProjectUrl">Project git url:</label>
                                     <input type="text" class="form-control form-control-user" id="gitProjectUrl" name="gitProjectUrl"
-                                        value="${gitProjectUrl}">
+                                        th:value="${gitProjectUrl}">
                                 </div>
                                 <div class="form-group">
                                     <label for="gitBranch">Target branch:</label>
-                                    <input type="text" class="form-control form-control-user" id="gitBranch" name="gitBranch" value="${gitBranch}">
+                                    <input type="text" class="form-control form-control-user" id="gitBranch" name="gitBranch" th:value="${gitBranch}">
                                 </div>
                                 <div class="form-group">
                                     <label for="directoryPath">Destination path containing .feature files:</label>
                                     <input type="text" class="form-control form-control-user" id="directoryPath" name="directoryPath"
-                                        value="${directoryPath}">
+                                        th:value="${directoryPath}">
                                 </div>
                                 <div class="form-group">
                                     <label for="folderToExclude">Folder to exclude from scaffolding:</label>
                                     <input type="text" class="form-control form-control-user" id="folderToExclude" name="folderToExclude"
-                                        value="${folderToExclude}">
+                                        th:value="${folderToExclude}">
                                 </div>
                                 <input type="submit" value="Submit" class="btn btn-primary btn-user btn-block">
                             </form>

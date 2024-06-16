@@ -77,8 +77,7 @@ public class AppController {
     }
 
     private void updateFeatureFiles(Config config) {
-        List<FeatureFile> featureFiles = featureFilesModule.getFiles(config.getDirectoryPath(),
-                config.getFolderToExclude());
+        List<FeatureFile> featureFiles = featureFilesModule.getFiles(config.getDirectoryPath(),config.getFolderToExclude());
         for (FeatureFile featureFile : featureFiles) {
             System.out.println("Feature file: " + featureFile.getName());
             System.out.println("Relative path: " + featureFile.getRelativePath());
