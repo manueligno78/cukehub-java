@@ -1,30 +1,33 @@
 <li th:fragment="scenario">
     <div class="card shadow border-secondary mb-4" th:id="'scenarioCard-' + ${featureFile.featureId} + '-' + ${index}">
-        <!-- <div class="card-header py-3">
+        <div class="card-header py-3">
             <div class="d-flex gap-2 justify-content-center flex-wrap">
-                <span th:each="tag, tagStat : ${child.scenario.tags}"
-                    th:id="'tag-' + ${tag.name} + '-featureCard-' + ${featureFile.featureId} + '-' + ${featureFile.featureId} + '-' + ${featureFile.feature.children[index].scenario.id}"
+                <span th:each="tag, tagStat : ${child.tags}"
+                    th:id="'${featureFile.feature.children[index].scenario.id}'"
                     class="tag-label badge d-flex p-2 mr-1 mb-1 align-items-center text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill"
                     th:data-name="${tag.name}">
                     <span contentEditable="true"
-                        th:onblur="'updateFeature(' + ${featureFile.featureId} + ', \'feature.children[' + ${index} + '].scenario.tags[' + ${tagStat.index} + '].name\', this.innerText)'"
+                        th:onblur="updateFeature(this)"
+                        th:data-name="${tag.name}" 
+                        th:data-feature-id="${featureFile.featureId}" 
+                        th:data-field="'feature.tags[' + ${tagStat} + ']'"
                         class="px-1" th:text="${tag.name}">
                     </span>
-                    <button type="button" class="close" aria-label="Close"
+                    <!-- <button type="button" class="close" aria-label="Close"
                         th:onclick="'removeTag(' + ${featureFile.featureId} + ', ' + ${featureFile.feature.children[index].scenario.id} + ', ' + ${tag.name} + ',\'tag-' + ${tag.name} + '-featureCard-' + ${featureFile.featureId} + '-' + ${featureFile.featureId} + '-' + ${featureFile.feature.children[index].scenario.id} + '\')'">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> -->
                 </span>
-                <span
+                <!-- <span
                     class="add-tag badge d-flex p-2 align-items-center text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
                     <a href="#" class="addTagInput" contentEditable="true" onclick="this.innerText = '@'"
                         onblur="if (isValidTag(this.innerText)) addTag(${featureFile.featureId}, ${featureFile.feature.children[index].scenario.id}, this.innerText, this); else this.innerText = '+ add tag'"
                         onkeydown="if (event.key === 'Enter') { event.preventDefault(); if (isValidTag(this.innerText)) addTag(${featureFile.featureId}, ${featureFile.feature.children[index].scenario.id}, this.innerText, this); else this.innerText = '+ add tag'}">
                         + add tag
                     </a>
-                </span>
+                </span> -->
             </div>
-        </div> -->
+        </div>
         <div class="card-body">
             <!-- <span class="small" th:if="${child.isOutline}">Outline Scenario</span> -->
             <h5 href="#" contentEditable="true"
