@@ -30,11 +30,11 @@
             <h5 href="#" contentEditable="true"
                 th:text="${child.name}">
             </h5>
-            <!-- <span> -->
-                <!-- <span th:text="${child.numberOfSteps}"> steps </span> -->
+            <span>
+                <span th:text="${child.steps.size()} + ' steps'"></span>
                 <!-- <span th:if="${child.isOutline}"> iterated in <span -->
                         <!-- th:text="${child.numberOfExamples}"> examples </span></span> -->
-            <!-- </span> -->
+            </span>
             <p contentEditable="true" data-feature-id="${featureFile.featureId}" data-index="${index}"
                 th:onblur="updateFeature(this.dataset.featureId, 'feature.children[' + this.dataset.index + '].description', this.innerText)">
                 <span th:if="${child.description != null}"
