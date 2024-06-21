@@ -2,10 +2,22 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.0'
 	id 'io.spring.dependency-management' version '1.1.5'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+//    id 'com.github.manueligno78.cukehub' version '0.0.1-SNAPSHOT'
 }
 
 group = 'com.github.manueligno78'
 version = '0.0.1-SNAPSHOT'
+
+gradlePlugin {
+    plugins {
+        CukeHubPlugin {
+            id = 'cukehub-plugin'
+            implementationClass = 'org.example.CukehubPluginPlugin'
+        }
+    }
+}
 
 java {
 	toolchain {
@@ -15,6 +27,7 @@ java {
 
 repositories {
 	mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -29,6 +42,23 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'io.cucumber:gherkin:5.1.0'
+}
+
+configurations {
+    testRuntimeOnly {
+        exclude group: 'org.gradle', module: 'logging'
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal() // Riferimento compatto al tuo repository locale
+    }
 }
 
 tasks.named('test') {
